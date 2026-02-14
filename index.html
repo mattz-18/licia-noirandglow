@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Licia Noir And Glow | Luxury Nails & Art</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <style>
+    :root {
+      /* WARNA DIGANTI KE GELAP/ABU-ABU */
+      --bg-dark: #1a1a1a;       /* Abu-abu sangat gelap */
+      --card-dark: #262626;     /* Warna kotak isi */
+      --gold: #b8860b;
+      --gold-soft: #d4af37;
+      --white: #ffffff;
+      --dark-text: #eeeeee;
+      --glass: rgba(0, 0, 0, 0.7); /* Efek kaca gelap */
+      --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      /* Background ganti ke Abu-abu Gelap */
+      background-color: var(--bg-dark);
+      font-family: 'Times New Roman', serif;
+      color: var(--dark-text);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* --- NAVIGATION --- */
+    header {
+      width: 100%; background: #000000; height: 80px;
+      display: flex; justify-content: center; align-items: center;
+      position: fixed; top: 0; z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      border-bottom: 5px solid var(--gold);
+    }
+
+    .shop-name {
+      font-size: 1.6rem; font-weight: bold; color: var(--gold);
+      letter-spacing: 4px; text-transform: uppercase;
+    }
+
+    .menu-icon {
+      position: fixed; top: 20px; left: 20px; z-index: 1100;
+      font-size: 24px; color: var(--gold); cursor: pointer;
+      background: #000; padding: 10px; border-radius: 50%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      border: 1px solid var(--gold);
+      transition: var(--transition);
+    }
+    .menu-icon:hover { transform: rotate(90deg); color: var(--gold-soft); }
+
+    .sidebar {
+      position: fixed; top: 0; left: -320px; width: 300px; height: 100%;
+      background: #000; z-index: 2000; transition: var(--transition);
+      padding-top: 80px; box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+      border-right: 2px solid var(--gold);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar a {
+      display: block; padding: 20px 35px; text-decoration: none;
+      color: var(--white); font-weight: bold; border-bottom: 1px solid #222;
+      transition: 0.3s; letter-spacing: 1px;
+    }
+    .sidebar a:hover { background: var(--card-dark); color: var(--gold); padding-left: 45px; }
+
+    /* --- LAYOUT --- */
+    .page {
+      display: none; padding: 120px 20px 80px; min-height: 100vh;
+      text-align: center; animation: pageIn 0.8s ease;
+    }
+    .page.active { display: block; }
+    @keyframes pageIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+    /* LOGO DIBUAT BULAT */
+    .logo-bulat {
+      width: 150px; 
+      height: 150px; 
+      object-fit: cover; 
+      border-radius: 50%; /* Membuat Bulat */
+      margin-bottom: 20px; 
+      border: 3px solid var(--gold);
+      background: white;
+      filter: drop-shadow(0 5px 15px rgba(184,134,11,0.4));
+    }
+
+    .section-title { color: var(--gold); font-size: 2.2rem; margin-bottom: 10px; text-transform: uppercase; }
+    .subtitle { font-style: italic; color: #bbb; margin-bottom: 40px; display: block; }
+
+    /* --- FILTER SYSTEM --- */
+    .filter-container { margin-bottom: 30px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 8px 20px; border: 1px solid var(--gold); background: transparent;
+      color: var(--gold); cursor: pointer; border-radius: 20px; font-weight: bold; transition: 0.3s;
+    }
+    .filter-btn.active, .filter-btn:hover { background: var(--gold); color: black; }
+
+    /* --- GALLERY GRID --- */
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px; max-width: 1200px; margin: 0 auto;
+    }
+    .gallery-item {
+      background: var(--card-dark); padding: 12px; border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); transition: var(--transition);
+      position: relative; overflow: hidden;
+      border: 1px solid #333;
+    }
+    .gallery-item:hover { transform: translateY(-10px); border-color: var(--gold); }
+    
+    .gallery-item img { width: 100%; height: 400px; object-fit: cover; display: block; border-radius: 5px; }
+
+    .item-overlay {
+      position: absolute; top: 12px; left: 12px; right: 12px; bottom: 50px;
+      background: rgba(0,0,0,0.6); color: white; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; opacity: 0; transition: 0.3s;
+      backdrop-filter: blur(3px);
+    }
+    .gallery-item:hover .item-overlay { opacity: 1; }
+
+    .prod-label {
+      background: #000; color: var(--gold); padding: 10px;
+      display: block; margin-top: 10px; font-size: 0.9rem; font-weight: bold;
+    }
+
+    /* --- PRICE LIST --- */
+    .price-card {
+      background: var(--card-dark); padding: 40px; border-radius: 20px;
+      max-width: 700px; margin: 0 auto; border: 1px solid rgba(184, 134, 11, 0.3);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .price-item {
+      display: flex; justify-content: space-between; padding: 15px 0;
+      border-bottom: 1px solid #333; font-size: 1.1rem;
+    }
+    .price-item span:last-child { color: var(--gold); font-weight: bold; }
+
+    /* --- SOCIAL & FLOATING --- */
+    .floating-wa {
+      position: fixed; bottom: 30px; right: 30px; background: #25d366;
+      color: white; width: 60px; height: 60px; border-radius: 50%;
+      display: flex; justify-content: center; align-items: center;
+      font-size: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+      z-index: 999; transition: 0.3s; animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+
+    .social-box {
+      background: #000; padding: 30px; border-radius: 25px;
+      display: inline-flex; gap: 30px; margin-top: 20px; border: 1px solid #333;
+    }
+    .social-box a { color: var(--gold); font-size: 28px; transition: 0.3s; }
+    .social-box a:hover { color: var(--white); transform: translateY(-5px); }
+
+    .info-box {
+      background: var(--card-dark); 
+      padding: 30px; 
+      border-radius: 15px; 
+      max-width: 500px; 
+      margin: 0 auto; 
+      border: 1px solid rgba(184,134,11,0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .section-title { font-size: 1.6rem; }
+      .gallery-item img { height: 320px; }
+      .floating-wa { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 24px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="shop-name">Licia Noir and Glow</div>
+  </header>
+
+  <div class="menu-icon" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+
+  <nav class="sidebar" id="sidebar">
+    <div onclick="toggleSidebar()" style="text-align:right; padding: 20px; font-size: 30px; cursor: pointer; color: white;">&times;</div>
+    <a href="javascript:void(0)" onclick="showPage('home')"><i class="fas fa-home"></i> HOME</a>
+    <a href="javascript:void(0)" onclick="showPage('koleksi')"><i class="fas fa-images"></i> KOLEKSI</a>
+    <a href="javascript:void(0)" onclick="showPage('order')"><i class="fas fa-clipboard-list"></i> PRICE & ORDER</a>
+  </nav>
+
+  <a href="https://wa.me/+62895326100411" class="floating-wa" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <main>
+    <section id="home" class="page active">
+      <img src="https://chief-white-wnropkk8bv.edgeone.app/1000070661.png" alt="Logo" class="logo-bulat">
+      
+      <h1 class="section-title">Luxury Nails Art</h1>
+      <span class="subtitle">"Elegansi premium untuk setiap kepribadian kuku Anda."</span>
+
+      <div class="info-box">
+        <p><i class="fas fa-star" style="color: var(--gold);"></i> <b>Home Service & Cafe Visit</b></p>
+        <p style="margin: 10px 0; font-size: 0.95rem;">Melayani area Malang Kota dengan kualitas studio profesional.</p>
+        <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
+        <p><i class="fas fa-clock"></i> Open: 09.00 - 20.00 WIB</p>
+      </div>
+
+      <div class="social-box">
+        <a href="https://www.instagram.com/licia_noirglow?igsh=cGo5MnZydWNzMW4w" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@licia_noirglow?_r=1&_t=ZS-93ux5QYsZ6b" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </section>
+
+    <section id="koleksi" class="page">
+      <h2 class="section-title">Our Masterpiece</h2>
+      <span class="subtitle">Klik kategori untuk memfilter desain</span>
+
+      <div class="filter-container">
+        <button class="filter-btn active" onclick="filterGallery('all')">Semua</button>
+        <button class="filter-btn" onclick="filterGallery('best')">Best Seller</button>
+        <button class="filter-btn" onclick="filterGallery('custom')">Custom Set</button>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gallery-item best">
+          <img src="https://spotless-tomato-ih3ijfkbzg.edgeone.app/💜%20NOIR%20BLOOM%20SET%20💜Deep%20purple%20with%20refined%20floral%20&%20butterfly%20detailing—a%20timeless%20elegance%20fo.jpg">
+          <div class="item-overlay">
+            <h3>Noir Bloom</h3>
+            <p>Start from Rp 150k</p>
+          </div>
+          <span class="prod-label">Noir Bloom Set</span>
+        </div>
+        <div class="gallery-item best">
+          <img src="https://purring-silver-oof5pod600.edgeone.app/nl3.jpeg">
+          <div class="item-overlay">
+            <h3>Cat Eye Pink</h3>
+            <p>Start from Rp 120k</p>
+          </div>
+          <span class="prod-label">Cat Eye Pink</span>
+        </div>
+        <div class="gallery-item custom">
+          <img src="https://grumpy-coral-ug5lyb0f14.edgeone.app/IMG_20260212_193403.jpg">
+          <div class="item-overlay">
+            <h3>Black Luxury</h3>
+            <p>Start from Rp 140k</p>
+          </div>
+          <span class="prod-label">Black Luxury</span>
+        </div>
+        <div class="gallery-item custom">
+          <img src="https://marxist-maroon-lqxzhyvgfe.edgeone.app/IMG_20260212_193514.jpg">
+          <div class="item-overlay">
+            <h3>Personality Set</h3>
+            <p>Start from Rp 130k</p>
+          </div>
+          <span class="prod-label">Personality Nail Set</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://nearby-lavender-zs2ybes7af.edgeone.app/foto%20nl%201.jpeg">
+          <div class="item-overlay">
+            <h3>Elegant Gloss</h3>
+            <p>Start from Rp 90k</p>
+          </div>
+          <span class="prod-label">Elegant Gloss</span>
+        </div>
+        <div class="gallery-item best">
+          <img src="https://thick-orange-tootazumxx.edgeone.app/nl2.jpeg">
+          <div class="item-overlay">
+            <h3>Blue Ocean</h3>
+            <p>Start from Rp 125k</p>
+          </div>
+          <span class="prod-label">Blue Ocean</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="order" class="page">
+      <h2 class="section-title">price in Beauty</h2>
+      <span class="subtitle">Harga transparan tanpa biaya tersembunyi</span>
+
+      <div class="price-card">
+        <div class="price-item"><span>Basic Gel Polish</span> <span>Rp 85.000</span></div>
+        <div class="price-item"><span>Cat Eye Series</span> <span>Rp 110.000</span></div>
+        <div class="price-item"><span>Nail Art Design</span> <span>Rp 120k - 200k</span></div>
+        <div class="price-item"><span>Fake Nails Custom Set</span> <span>Rp 150.000</span></div>
+        <div class="price-item"><span>Home Service Charge</span> <span>Rp 20k - 50k</span></div>
+      </div>
+
+      <div style="margin-top: 50px;">
+        <h3 style="color: var(--gold); margin-bottom: 20px;">Size Guide</h3>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+          <img src="https://familiar-apricot-qrhevl8bt3.edgeone.app/bb9ad23a8e6d89b0d4f346c7840a38ef.jpg" style="width: 280px; border: 5px solid #444; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+          <img src="https://following-moccasin-dlkotfcyrd.edgeone.app/d1e18dbe056c82ba6cc4e88b4e8fac51.jpg" style="width: 280px; border: 5px solid #444; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    function showPage(pageId) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      document.getElementById('sidebar').classList.remove('open');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function filterGallery(category) {
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const items = document.querySelectorAll('.gallery-item');
+      items.forEach(item => {
+        item.style.display = 'none';
+        if (category === 'all' || item.classList.contains(category)) {
+          item.style.display = 'block';
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
